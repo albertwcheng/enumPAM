@@ -52,7 +52,7 @@ void printFGHelp(const char* programname)
 	//cerr<<"-b fasta output_prefix output_suffix prefixLength outchrRef readLength"<<endl;
 	//cerr<<"\tGenerete binary files of simulated reads binned by prefix"<<endl;
 
-	cerr<<"-b2 fasta output_prefix output_suffix prefixLength outchrRef prefix2"<<endl;
+	cerr<<"-b2 fasta output_prefix output_suffix prefixLength outchrRef prefix2 ignoreLowercaseSeq"<<endl;
 	cerr<<"\tGenerete binary files of simulated reads binned by prefix (only those with prefix2)"<<endl;
 	
 
@@ -88,14 +88,14 @@ void printFGHelp(const char* programname)
 
 void foldGenomics_generateBinary2(int argc,const char** argv)
 {
-	if(argc<8)
+	if(argc<9)
 	{
 		printFGHelp(argv[0]);
 		return;
 	}
 	
 	GenomeNmersEncoder encoder(argv[3],argv[4],StringUtil::atoi(argv[5]),argv[6],23);
-	encoder.transferFromFastaFile(argv[2],argv[7]);
+	encoder.transferFromFastaFile(argv[2],argv[7],argv[8][0]=='N' || argv[8][0]=='n' );
 	
 }
 void foldGenomics_generateBinary(int argc,const char** argv)

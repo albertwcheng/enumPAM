@@ -752,13 +752,31 @@ public:
     {
         //NGG = 22G 23G
         
-        return str[i+21]=='G' && str[i+22]=='G';
+        for(int j=i;j<i+23;j++){
+            //cerr<<"check "<<str[j]<<" " <<(str[j]>'T' || str[j]=='N')<<endl;
+            if(str[j]>'T' || str[j]=='N'){
+                //lowercase or N
+                //cerr<<"******reject "<<str.substr(i,23)<<endl;
+                return false;
+            }
+            
+            /*f(str[j]=='n' || str[j]=='N'){
+                //N
+                //cerr<<"******reject "<<str.substr(i,23)<<endl;
+                return false;
+            }*/
+            
+            
+        }
+        
+        
+        return (str[i+21]=='G' || str[i+21]=='g') && (str[i+22]=='G' || str[i+22]=='g');
     }
     
-	inline void transferFromFastaFile(string fastaFileName,string prefixConstraint="")
+	inline void transferFromFastaFile(string fastaFileName,string prefixConstraint="",bool autoUpperCase=true)
 	{
 		int curChrID=0;
-		FastaFile ffile(fastaFileName);
+		FastaFile ffile(fastaFileName,autoUpperCase);
 		int nReads=0;
 		
 		int constraintLength=prefixConstraint.length();
@@ -779,16 +797,20 @@ public:
 				continue;
 			}
 			
+                
 			for(int i=0;i<=seqLength-nmersize;i++)
 			{
                 
                 //here is where we put in the PAM sequence constraints
                 //nmersize is  23
+                
+                
+                
                 if(!acceptPAM(i,ffile.seq)){
                     continue;
                 }
                 
-                // cerr<<"accept "<<ffile.seq.substr(i,23)<<endl;
+                //cerr<<"accept "<<ffile.seq.substr(i,23)<<endl;
                 
 				BufOut* bout=NULL;
 				string prefix=getPrefix(i,ffile.seq);
@@ -832,6 +854,8 @@ public:
                 if(!acceptPAM(i,rseq)){
                     continue;
                 }
+                
+                //cerr<<"accept "<<rseq.substr(i,23)<<endl;
                 
                 
 				BufOut* bout=NULL;
